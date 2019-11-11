@@ -1,0 +1,60 @@
+* {
+    font-family: Segoe Ui light, arial
+}
+
+body {
+    color: #74b1be;
+    background-color: #111;
+    margin: 0px;
+    padding: 0px
+}
+
+header {
+    padding: 15px 50px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #1a1b23;
+}
+
+#logo p {
+    font-weight: bold;
+    border: 1px solid #1a1b23;
+    border-radius: 50px;
+    font-size: 70%;
+    padding: 5px 40px;
+    display: inline-block;
+}
+
+header > div {
+    flex: 1;
+    text-align: right
+}
+
+#current_project {
+    flex: 3
+}
+
+#current_project button {
+    background: transparent;
+    border: 1px solid #74b1be;
+    border-radius: 50px;
+    padding: 5px 25px 7px 25px;
+    margin: 5px;
+    font-size: 90%;
+    color: #74b1be;
+    font-weight: bold;
+    cursor: pointer
+}
+
+#current_project i {
+    margin: 0px;
+    margin-left: 10px
+}
+
+.icon {
+    vertical-align: middle;
+    margin: 5px;
+    padding-bottom: 3px;
+    height: 14px;
+    display: inline-block
+}
