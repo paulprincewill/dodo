@@ -38,7 +38,7 @@ const dd = {
 
     css: function(file) {
         var filePath = './ui/'+this.page+'/'+file+'.css';
-        this.all_css[file] = "<link rel='stylesheet' href='"+filePath+"'>";
+        this.all_css[file] = "<link rel='stylesheet' href='../"+filePath+"'>";
     },
 
     writeHTML: function(target) {
@@ -56,7 +56,7 @@ const dd = {
         this.writeHTML(this.all_ui);
         this.writeHTML(this.all_footers);
 
-        console.log('The file has ended');
+        console.log('The file has ended - initialize.js');
         return this.full_html;
     }
 }

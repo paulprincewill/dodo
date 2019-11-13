@@ -1,115 +1,111 @@
-// Edited Paul Princewill (otwopaul@gmail.com) 
-// This is where the routing and creating of our server takes place
-var http = require('http');
-var fs = require('fs');
-var path = require('path');
-var url = require('url');
+const express = require('express');
+const app = express();
 
-// First, we create the function to be reused for displaying content
-var dd = {
-    server: '',
-    contentType: 'text/html',
-    display: function(content) {
-        this.server.writeHead(200, {'Content-Type': this.contentType}); 
-        this.server.end(content, 'utf-8');
-    },
+global.$post = {}; // For saving form data sent using POST
 
-    displayError: function(error) {
+app.use(express.urlencoded({ extended: true }));
+// Handles POST data sent to any page
+// Simply saves it in $post global variable
+app.post('*', (req, res, next) => {
+    $post = req.body;
+    // Moves to the next routing logic that will display the actual page
+    next(); 
+})
 
-        if (error.code == 'ENOENT') {
-            
-            var server = this.server;  // readFile callback cannot work with 'this'
-            fs.readFile('./404.html', function(error, content) {
-                server.writeHead(404, { 'Content-Type': 'text/html' });
-                server.end(content, 'utf-8');
-            });
+// For static assets, html or css
+app.use('/_assets', express.static('_assets'));
+app.use('/ui', express.static('ui'));
 
-        }
-        else {
-            this.server.writeHead(500);
-            this.server.end('Sorry, check with the site admin for error: '+error.code+' ..\n');
-        }
-    }
-};
+// For index page, duh!
+app.get('/', (req, res) => {
+    res.set('Content-Type', 'text/html');
+    res.send("Welcome to the homepage");
+});
 
-// We will use this later to display different contentType for different static files
-var mimeTypes = {
-    '.html': 'text/html',
-    '.js': 'text/javascript',
-    '.css': 'text/css',
-    '.json': 'application/json',
-    '.png': 'image/png',
-    '.jpg': 'image/jpg',
-    '.gif': 'image/gif',
-    '.svg': 'image/svg+xml',
-    '.wav': 'audio/wav',
-    '.mp4': 'video/mp4',
-    '.woff': 'font-woff',
-    '.woff2': 'font-woff2',
-    '.ttf': 'font-ttf',
-    '.eot': 'application/vnd.ms-fontobject',
-    '.otf': 'application/font-otf',
-    '.wasm': 'application/wasm'
-};
+// For backend urls like "app/create/page"
+app.use('/app', (req, res, next) => {
+    loadModule(req, res, next, 'apps/backend');
+});
 
-// We create the server, obviously?
-http.createServer(function (request, server) {
+// When none of the routing above works, we assume it is a normal page
+app.use('', (req, res, next) => {
+    loadModule(req, res, next, 'pages');
+});
 
-    dd.server = server;
-    var target = url.parse(request.url, true);
-    target = target.pathname;
+
+// Load the module associated with the page
+// Gets the feedback and writes as HTML
+function loadModule(req, res, next, targetModule) {
 
     // This removes slashes - '/home/' becomes 'home'
-    target = target.replace(/^\/+|\/+$/g, '');
+    const target = req.url.replace(/^\/+|\/+$/g, '');
+    const module = './'+targetModule+'/'+target+'.js'; // Find the module
 
-    // Then we decide if to load index page, a page, or a static file  
-    if (target === '') { // If it is the index page
-        dd.display('Welcome to the Homepage');
-    } else {
+    try {
 
-        var file_extension = String(path.extname(target)).toLowerCase();
-        var file_path = './'+target;
+        const page =  require(module);
 
-        // If there is no file extension
-        // it means we are displaying a page
-        if (file_extension == '') {
-            
-            // Each page has a special file in 'pages' folder where all the files are linked
-            var module = './pages/'+target+'.js';
-
-            try {
-                var file = require(module);
-                dd.contentType = "text/html";
-                dd.display(file);
-
-            } catch {
-                dd.display('404 your destiny not found');
-            }
-
-        } else {
-
-            // Automatically select the content type based on file extension 
-            // from defined array above, you can add to the list
-            var contentType = mimeTypes[file_extension] || 'application/octet-stream';
-            dd.contentType = contentType;
-
-            // Read static file directly, obviously?
-            fs.readFile(file_path, function(error, content) {
-                if (error) {
-                    dd.server = server;
-                    dd.displayError(error);
-                } else {
-                    dd.display(content);
-                }
-            });
-           
+        // If redirect is set from the module, redirect immediately
+        if (typeof page.redirectTo !== "undefined") {
+            res.redirect(page.redirectTo);
+            return;
         }
 
+        res.set('Content-Type', 'text/html');
+        res.send(page);
 
+    } catch(err) {
+        console.log(err);
+        res.status(404).send("404 page not found");
     }
     
+}
 
-}).listen(334);
 
-// const createPage = require("./apps/backend/create/new_page");
-// createPage('hello')
+
+
+// PORT 
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log('Listening at port '+port));
+
+
+
+
+
+
+
+
+
+// My testing shits
+// Does not have anything to do with the application
+// Don't edit, create your own tesing space for God's sake
+const fs = require("fs");
+const Path = require("path");
+
+// Delete things folder I created
+function deleteFolder(path) {
+    if (fs.existsSync(path)) {
+      fs.readdirSync(path).forEach((file, index) => {
+        const curPath = Path.join(path, file);
+        if (fs.lstatSync(curPath).isDirectory()) { // recurse
+          deleteFolder(curPath);
+        } else { // delete file
+          fs.unlinkSync(curPath);
+        }
+      });
+      fs.rmdirSync(path);
+
+      console.log(path+" was deleted");
+    }
+
+}
+
+
+function deleteAllFolders(folder) {
+    deleteFolder('ui/'+folder);
+    deleteFolder('apps/backend/'+folder);
+    deleteFolder('apps/frontend/'+folder);
+    fs.unlinkSync('pages/'+folder+'.js');
+}
+
+// deleteAllFolders('testing');

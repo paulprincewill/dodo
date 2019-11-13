@@ -1,5 +1,5 @@
 const dd = require('../initialize');
-dd.page = 'create';
+dd.page = "testing";
 
 dd.header('main');
 dd.ui('main');
