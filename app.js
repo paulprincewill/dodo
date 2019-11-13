@@ -107,4 +107,4 @@ function deleteAllFolders(folder) {
     fs.unlinkSync('pages/'+folder+'.js');
 }
 
-// deleteAllFolders('testing');
+//deleteAllFolders('testing');
