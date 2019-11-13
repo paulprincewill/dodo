@@ -1,5 +1,5 @@
-const dd = require('../initialize');
-dd.page = 'create';
+const Init = require('../initialize');
+const dd = new Init("create");
 
 dd.header('main');
 dd.ui('main');

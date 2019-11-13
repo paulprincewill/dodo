@@ -39,12 +39,11 @@ function loadModule(req, res, next, targetModule) {
 
     // This removes slashes - '/home/' becomes 'home'
     const target = req.url.replace(/^\/+|\/+$/g, '');
-    const module = './'+targetModule+'/'+target+'.js'; // Find the module
+    const pageModule = './'+targetModule+'/'+target+'.js'; // Find the module
 
     try {
 
-        const page =  require(module);
-
+        const page =  require(pageModule);
         // If redirect is set from the module, redirect immediately
         if (typeof page.redirectTo !== "undefined") {
             res.redirect(page.redirectTo);

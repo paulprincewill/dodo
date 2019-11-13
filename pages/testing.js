@@ -1,8 +1,8 @@
-const dd = require('../initialize');
-dd.page = "testing";
+const Init = require('../initialize');
+const dd = new Init("testing");
 
 dd.header('main');
-dd.ui('main');
+dd.ui('new');
 dd.footer('main');
 
 dd.css('styles');
