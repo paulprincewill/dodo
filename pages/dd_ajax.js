@@ -6,5 +6,7 @@ dd.ui('main');
 dd.footer('main');
 
 dd.css('styles');
+dd.js('dodo','_lib');
+dd.js('main');
 
 module.exports =  dd.compile();

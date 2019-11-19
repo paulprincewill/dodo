@@ -7,6 +7,7 @@ class CompilePage {
         this.all_headers = {};
         this.all_footers = {};
         this.all_css = {};
+        this.all_js = {};
         this.full_html = '';
     }
 
@@ -42,6 +43,13 @@ class CompilePage {
         var filePath = './ui/'+this.page+'/'+file+'.css';
         this.all_css[file] = "<link rel='stylesheet' href='../"+filePath+"'>";
     }
+    
+    js(file, location = 'internal') {
+
+        var filePath = location == 'internal' ? './js/'+this.page+'/'+file+'.js' : location == 'external' ? file : location !='' ? './js/'+location+'/'+file+'.js' : '';
+
+        this.all_js[file] = "<script src='../"+filePath+"'></script>";
+    }
 
     writeHTML(target) {
         for (const data in target) {
@@ -56,6 +64,7 @@ class CompilePage {
         this.writeHTML(this.all_headers);
         this.writeHTML(this.all_css);
         this.writeHTML(this.all_ui);
+        this.writeHTML(this.all_js);
         this.writeHTML(this.all_footers);
 
         console.log('The file has ended - initialize.js');

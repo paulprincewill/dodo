@@ -15,6 +15,7 @@ app.post('*', (req, res, next) => {
 // For static assets, html or css
 app.use('/_assets', express.static('_assets'));
 app.use('/ui', express.static('ui'));
+app.use('/js', express.static('apps/frontend'));
 
 // For index page, duh!
 app.get('/', (req, res) => {
