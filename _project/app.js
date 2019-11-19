@@ -54,6 +54,7 @@ function loadModule(req, res, next, targetModule) {
         res.send(page);
 
     } catch(err) {
+        console.log(err);
         res.status(404).send("404 page not found");
     }
     

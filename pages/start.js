@@ -1,7 +1,7 @@
 const init = require('../initialize');
-const dd = new init("create");
+const dd = new init("start");
 
-dd.header('main');
+dd.header('noheader');
 dd.ui('main');
 dd.footer('main');
 

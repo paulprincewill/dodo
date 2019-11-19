@@ -1,5 +1,5 @@
 const init = require('../initialize');
-const dd = new init("create");
+const dd = new init("dd_ajax");
 
 dd.header('main');
 dd.ui('main');

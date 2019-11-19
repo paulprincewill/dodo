@@ -1,0 +1,30 @@
+main {
+    padding: 10%
+}
+
+form {
+    margin: auto;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    width: 40%;
+    overflow: hidden;
+}
+
+form input {
+    border: 0px;
+    border-bottom: 1px solid #ddd;
+    padding: 25px;
+    width: 95%;
+}
+
+form button {
+    margin: 20px auto;
+    background: #0069ff;
+    color: white;
+    font-weight: bold;
+    font-size: 90%;
+    padding: 8px 40px;
+    border-radius: 5px;
+    display: block;
+    border: 0px;
+}
